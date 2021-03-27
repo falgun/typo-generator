@@ -30,14 +30,14 @@ final class {$tableNameInUpper}Meta
 
     private string \$alias;
 
-    private function __construct(string \$alias)
+    private function __construct(string \$alias = '')
     {
         \$this->alias = \$alias;
     }
 
     public static function new()
     {
-        return new static(static::NAME);
+        return new static();
     }
 
     public static function as(string \$alias)
@@ -47,7 +47,18 @@ final class {$tableNameInUpper}Meta
 
     public function table(): Table
     {
-        return Table::fromName(self::NAME);
+        \$table = Table::fromName(self::NAME);
+
+        if (\$this->alias !== '') {
+            \$table->as(\$this->alias);
+        }
+
+        return \$table;
+    }
+
+    private function getNameOrAlias(): string
+    {
+        return (\$this->alias ? \$this->alias : self::NAME);
     }
 
 CODE;
@@ -57,7 +68,7 @@ CODE;
 
     public function {$column->getName()}(): Column
     {
-        return Column::fromSchema(\$this->alias . '.{$column->getName()}');
+        return Column::fromSchema(\$this->getNameOrAlias() . '.{$column->getName()}');
     }
 
 CODE;
