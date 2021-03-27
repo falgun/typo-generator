@@ -1,0 +1,41 @@
+#!/usr/bin/env php
+<?php
+if (PHP_SAPI !== 'cli') {
+    die;
+}
+
+require getcwd() . '/vendor/autoload.php';
+
+use Falgun\Kuery\Kuery;
+use Falgun\Kuery\Configuration;
+use Falgun\Typo\Generator\Generator;
+use Falgun\Kuery\Connection\MySqlConnection;
+
+echo 'Please enter you Database credentials.' . PHP_EOL . PHP_EOL;
+
+$config = [];
+
+$config['host'] = readline('host: ');
+$config['user'] = readline('user: ');
+$config['password'] = readline('password: ');
+$config['database'] = readline('database: ');
+
+echo PHP_EOL;
+
+$targetDir = readline('where should we generate files? (full directory path): ');
+
+echo PHP_EOL;
+
+if (is_dir($targetDir) === false) {
+    die('Please make sure directory "' . $targetDir . '" exists or has permission.');
+} else {
+    $targetDir = rtrim($targetDir, '/');
+}
+
+echo PHP_EOL;
+
+$configuration = Configuration::fromArray($config);
+$connection = new MySqlConnection($configuration);
+$kuery = new Kuery($connection);
+
+(new Generator($kuery, $configuration))->generate($targetDir);

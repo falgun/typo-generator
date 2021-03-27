@@ -1,0 +1,6 @@
+/vendor
+/tests/config.php
+/build
+/composer.lock
+/.phpunit.result.cache
+/infection.log
