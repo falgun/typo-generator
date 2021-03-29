@@ -70,9 +70,11 @@ final class {$tableNameInUpper}Meta
 CODE;
 
             foreach ($table->getColumns() as $column) {
+                $columnMethodName = $this->prepareColumnName($column->getName());
+
                 $code .= <<<CODE
 
-    public function {$column->getName()}(): Column
+    public function {$columnMethodName}(): Column
     {
         return Column::fromSchema(\$this->getNameOrAlias() . '.{$column->getName()}');
     }
@@ -87,6 +89,15 @@ CODE;
 
     private function prepareTableName(string $name): string
     {
-        return str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $name)));
+        $asWords = ucwords(str_replace(['-', '_'], ' ', $name));
+
+        return str_replace(' ', '', $asWords);
+    }
+
+    private function prepareColumnName(string $name): string
+    {
+        $asWords = ucwords(str_replace(['-', '_'], ' ', $name));
+
+        return lcfirst(str_replace(' ', '', $asWords));
     }
 }
