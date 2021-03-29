@@ -22,6 +22,7 @@ namespace App\DB\Metas;
 
 use Falgun\Typo\Query\Parts\Table;
 use Falgun\Typo\Query\Parts\Column;
+use Falgun\Typo\Query\Parts\Asterisk;
 
 final class {$tableNameInUpper}Meta
 {
@@ -59,6 +60,11 @@ final class {$tableNameInUpper}Meta
     private function getNameOrAlias(): string
     {
         return (\$this->alias ? \$this->alias : self::NAME);
+    }
+
+    public function asterisk(): Asterisk
+    {
+        return Asterisk::fromTable(\$this->getNameOrAlias());
     }
 
 CODE;
